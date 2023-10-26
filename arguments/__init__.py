@@ -46,7 +46,7 @@ class ParamGroup:
 
 class ModelParams(ParamGroup): 
     def __init__(self, parser, sentinel=False):
-        self.sh_degree = 3
+        self.sh_degree = 3          # add 1 SH degree every 1000 iter
         self._source_path = ""
         self._model_path = ""
         self._images = "images"
@@ -72,6 +72,9 @@ class PipelineParams(ParamGroup):
 class OptimizationParams(ParamGroup):
     def __init__(self, parser):
         self.iterations = 30_000
+        # self.iterations = 1       # see initialization
+        # self.iterations = 3000      # see warm up
+
         self.position_lr_init = 0.00016
         self.position_lr_final = 0.0000016
         self.position_lr_delay_mult = 0.01
