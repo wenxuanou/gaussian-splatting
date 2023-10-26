@@ -12,6 +12,7 @@
 import torch
 import sys
 from datetime import datetime
+from PIL import Image
 import numpy as np
 import random
 
@@ -25,6 +26,12 @@ def PILtoTorch(pil_image, resolution):
         return resized_image.permute(2, 0, 1)
     else:
         return resized_image.unsqueeze(dim=-1).permute(2, 0, 1)
+
+def MasktoTorch(mask, resolution):
+    resized_mask_PIL = Image.fromarray(mask).resize(resolution)
+    resized_mask = np.array(resized_mask_PIL)
+    resized_mask = resized_mask[np.newaxis, :, :]   # shape: (1, h, w)
+    return torch.from_numpy(resized_mask)
 
 def get_expon_lr_func(
     lr_init, lr_final, lr_delay_steps=0, lr_delay_mult=1.0, max_steps=1000000
