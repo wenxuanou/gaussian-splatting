@@ -47,8 +47,8 @@ def loadCam(args, id, cam_info, resolution_scale):
         loaded_mask = resized_image_rgb[3:4, ...]
  
     # store loss mask
-    if cam_info.mask is not None:
-        loss_mask = MasktoTorch(cam_info.mask, resolution)   # shape: (1, h, w)
+    if cam_info.loss_mask is not None:
+        loss_mask = MasktoTorch(cam_info.loss_mask, resolution)   # shape: (1, h, w)
 
     return Camera(colmap_id=cam_info.uid, R=cam_info.R, T=cam_info.T, 
                   FoVx=cam_info.FovX, FoVy=cam_info.FovY, 
