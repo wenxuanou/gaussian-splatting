@@ -45,7 +45,13 @@ class Camera(nn.Module):
         else:
             self.original_image *= torch.ones((1, self.image_height, self.image_width), device=self.data_device)
 
-        self.loss_mask = loss_mask
+        if loss_mask is not None:
+            # apply loss mask
+            # self.loss_mask = loss_mask
+
+            # use loss mask as alpha mask
+            self.original_image *= loss_mask.to(self.data_device)
+
 
         self.zfar = 100.0
         self.znear = 0.01

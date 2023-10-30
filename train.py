@@ -87,17 +87,15 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         image, viewspace_point_tensor, visibility_filter, radii = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"]
 
         # Loss
-        # TODO: apply mask 
-        gt_image = viewpoint_cam.original_image
+        gt_image = viewpoint_cam.original_image     # already on cuda
 
-        loss_mask = viewpoint_cam.loss_mask.cuda()
-        gt_image_masked = torch.mul(gt_image, loss_mask.expand_as(gt_image))
-        image_masked = torch.mul(image, loss_mask.expand_as(image))
+        # TODO: apply loss mask
+        # loss_mask = viewpoint_cam.loss_mask.cuda()
+        # gt_image_masked = torch.mul(gt_image, loss_mask.expand_as(gt_image))
+        # image_masked = torch.mul(image, loss_mask.expand_as(image))
+        # Ll1 = l1_loss(image_masked, gt_image_masked)
 
-        # gt_image_masked = gt_image_masked.cuda()
-        # image_masked = image_masked.cuda()
-
-        Ll1 = l1_loss(image_masked, gt_image_masked)
+        Ll1 = l1_loss(image, gt_image)
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         loss.backward()
 

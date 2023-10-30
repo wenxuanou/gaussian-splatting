@@ -30,7 +30,7 @@ class CameraInfo(NamedTuple):
     FovY: np.array
     FovX: np.array
     image: np.array
-    mask: np.array
+    loss_mask: np.array
     image_path: str
     image_name: str
     width: int
@@ -99,12 +99,14 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder, mask_folder
         image_name = os.path.basename(image_path).split(".")[0]
         image = Image.open(image_path)
 
-        # TODO: load mask
-        mask_name = os.path.join(mask_folder, image_name+".npz")
-        mask = np.load(mask_name)
-        mask = mask["arr_0"] != 10      # sky label is 10
+        # load mask
+        mask = None
+        if os.path.exists(mask_folder):
+            mask_name = os.path.join(mask_folder, image_name+".npz")
+            mask = np.load(mask_name)
+            mask = mask["arr_0"] != 10      # sky label is 10
 
-        cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image, mask=mask, 
+        cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image, loss_mask=mask, 
                               image_path=image_path, image_name=image_name, width=width, height=height)
         cam_infos.append(cam_info)
     sys.stdout.write('\n')
