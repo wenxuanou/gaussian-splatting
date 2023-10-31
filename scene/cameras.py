@@ -49,8 +49,10 @@ class Camera(nn.Module):
             # apply loss mask
             # self.loss_mask = loss_mask
 
-            # use loss mask as alpha mask
-            self.original_image *= loss_mask.to(self.data_device)
+            # use loss mask as gt alpha mask
+            loss_mask = loss_mask.to(self.data_device)
+            loss_mask = loss_mask.expand_as(self.original_image).float() * -1   # broadcasting, torch converts True to -1
+            self.original_image = torch.mul(self.original_image, loss_mask)
 
 
         self.zfar = 100.0
